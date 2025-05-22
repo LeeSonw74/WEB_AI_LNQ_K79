@@ -12,7 +12,7 @@
     <div class="navbar-brand">Du lịch Thái Nguyên</div>
     <div class="navbar-menu-container">
       <ul class="navbar-menu" id="navbar-menu">
-        <li><a href="#">Trống</a></li>
+        <li><a href="#">Trang chủ</a></li>
         <li><a href="#">Trống</a></li>
         <li><a href="#">Trống</a></li>
         <li><a href="#">Trống</a></li>
@@ -35,7 +35,7 @@
   <!-- Khung chat popup -->
   <div class="chat-container" id="chat-container">
     <div class="chat-header">
-      <h2>🤖 Chatbot Du lịch</h2>
+      <h2><a href="{{ url_for('chat') }}" class="button-link" >🤖 Chatbot Du lịch  </a></h2>
       <div>
         <span class="minimize-btn" onclick="minimizeChat()">-</span>
         <span class="close-btn" onclick="clearAndCloseChat()">×</span>

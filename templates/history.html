@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch sử hội thoại</title>
+</head>
+<body>
+    <h2>Lịch sử hội thoại với Chatbot</h2>
+    {% for user, bot in history %}
+        <p><strong>Bạn:</strong>🗣 {{ user | safe}}</p>
+        <p><strong>Bot:</strong>🤖 {{ bot | safe}}</p>
+        <hr>
+    {% endfor %}
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Du lịch Thái Nguyên - Chatbot</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
 </head>
 <body>
   <!-- Thanh menu -->
@@ -11,9 +11,8 @@
     <div class="navbar-brand">Du lịch Thái Nguyên</div>
     <button class="hamburger" onclick="toggleMenu()">☰</button>
     <ul class="navbar-menu" id="navbar-menu">
-      <li><a href="{{ url_for('chat') }}" class="active">Chatbot AI</a></li>
-      <li><a href="#">Địa điểm du lịch (Sắp ra mắt)</a></li>
-      <li><a href="#">Lịch trình gợi ý (Sắp ra mắt)</a></li>
+      <li><a href="{{ url_for('index') }}" class = "active">Trang chủ</a></li>
+      <li><a href="{{ url_for('chat') }}" class="active">Chatbot AI</a></li>>
     </ul>
   </nav>
 
@@ -26,14 +25,14 @@
       {% if user_input %}
         <div class="message-wrapper">
           <div class="message user-message">
-            <span>{{ user_input }}</span>
+            <span>{{ user_input | safe }}</span>
           </div>
         </div>
       {% endif %}
       {% if bot_response %}
         <div class="message-wrapper">
           <div class="message bot-message">
-            <span style="white-space: pre-wrap;">{{ bot_response }}</span>
+            <span style="white-space: pre-wrap;">{{ bot_response | safe }}</span>
           </div>
         </div>
       {% endif %}
@@ -48,7 +47,7 @@
       <button type="submit">Gửi</button>
     </form>
   </div>
-
+  <a href="{{url_for('history')}}">Lịch sử chatbot</a>
   <script>
     const form = document.getElementById('chat-form');
     const textarea = form.querySelector('textarea');
