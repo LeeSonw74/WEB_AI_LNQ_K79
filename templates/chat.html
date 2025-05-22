@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Du lịch Thái Nguyên - Chatbot</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+</head>
+<body>
+  <!-- Thanh menu -->
+  <nav class="navbar">
+    <div class="navbar-brand">Du lịch Thái Nguyên</div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <ul class="navbar-menu" id="navbar-menu">
+      <li><a href="{{ url_for('index') }}" class = "active">Trang chủ</a></li>
+      <li><a href="{{ url_for('chat') }}" class="active">Chatbot AI</a></li>>
+    </ul>
+  </nav>
+
+  <!-- Khung chat -->
+  <div class="chat-container">
+    <div class="chat-header">
+      <h2>🤖 Chatbot Du lịch</h2>
+    </div>
+    <div class="chat-body" id="chat-body">
+      {% if user_input %}
+        <div class="message-wrapper">
+          <div class="message user-message">
+            <span>{{ user_input | safe }}</span>
+          </div>
+        </div>
+      {% endif %}
+      {% if bot_response %}
+        <div class="message-wrapper">
+          <div class="message bot-message">
+            <span style="white-space: pre-wrap;">{{ bot_response | safe }}</span>
+          </div>
+        </div>
+      {% endif %}
+      <div class="loading" id="loading" style="display: none;">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    <form class="chat-footer" method="POST" id="chat-form">
+      <textarea name="input" placeholder="Nhập câu hỏi về du lịch tại đây..."></textarea>
+      <button type="submit">Gửi</button>
+    </form>
+  </div>
+  <a href="{{url_for('history')}}">Lịch sử chatbot</a>
+  <script>
+    const form = document.getElementById('chat-form');
+    const textarea = form.querySelector('textarea');
+    const loading = document.getElementById('loading');
+    const chatBody = document.getElementById('chat-body');
+
+    // Gửi form khi nhấn Enter
+    textarea.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        form.submit();
+      }
+    });
+
+    // Hiển thị loading và cuộn xuống khi gửi
+    form.addEventListener('submit', function() {
+      loading.style.display = 'flex';
+      textarea.disabled = true;
+      textarea.value = '';
+      textarea.placeholder = 'Đang chờ phản hồi...';
+      scrollToBottom();
+    });
+
+    // Ẩn loading và cuộn khi tải trang
+    window.addEventListener('load', function() {
+      loading.style.display = 'none';
+      textarea.disabled = false;
+      textarea.placeholder = 'Nhập câu hỏi về du lịch tại đây...';
+      scrollToBottom();
+    });
+
+    // Cuộn xuống tin nhắn mới nhất
+    function scrollToBottom() {
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    // Toggle menu với hiệu ứng trượt
+    function toggleMenu() {
+      const menu = document.getElementById('navbar-menu');
+      menu.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
