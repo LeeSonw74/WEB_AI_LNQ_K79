@@ -1,15 +1,45 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <title>Lịch sử hội thoại</title>
+  <meta charset="UTF-8">
+  <title>Lịch sử hội thoại</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+  <!-- Thanh menu -->
+  <nav class="navbar">
+    <div class="navbar-brand">Du lịch Thái Nguyên</div>
+    <div class="navbar-menu-container">
+      <ul class="navbar-menu">
+        <li><a href="{{ url_for('index') }}">Trang chủ</a></li>
+        <li><a href="{{ url_for('chat') }}">Chatbot AI</a></li>
+        <li><a href="{{ url_for('history') }}" class="active">Lịch sử Chat Bot</a></li>
+      </ul>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+  </nav>
+
+  <!-- Nội dung chính -->
+  <div class="container">
     <h2>Lịch sử hội thoại với Chatbot</h2>
-    {% for user, bot in history %}
-        <p><strong>Bạn:</strong>🗣 {{ user | safe}}</p>
-        <p><strong>Bot:</strong>🤖 {{ bot | safe}}</p>
-        <hr>
-    {% endfor %}
-</body>
-</html>
+    <button class="clear-history-btn" onclick="clearHistory()">Xóa lịch sử</button>
+    <div class="history">
+      {% if history %}
+        {% for user_input, bot_response in history %}
+          <div class="message-wrapper">
+            <div class="message user-message">
+              <span>🗣 {{ user_input }}</span>
+            </div>
+            <div class="message bot-message">
+              <span style="white-space: pre-wrap;">🤖 {{ bot_response | safe }}</span>
+            </div>
+          </div>
+          <hr>
+        {% endfor %}
+      {% else %}
+        <p>Chưa có lịch sử trò chuyện.</p>
+      {% endif %}
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{{ url_for('static', filename='history.js') }}"></script>
