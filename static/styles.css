@@ -466,10 +466,11 @@ body.dark-mode .chat-footer button:hover {
 body.dark-mode .loading .dot {
   background-color: #1a5e2e;
 }
+/* Nút button chatbot để vào "/chat" */
 .button-link {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #28a745;
+    background-color: #218838;
     color: white;
     border-radius: 8px;
     text-decoration: none;
@@ -477,7 +478,7 @@ body.dark-mode .loading .dot {
 }
 
 .button-link:hover {
-    background-color: #28a745;
+    background-color: #218838;
 }
 
 .button-link:active {

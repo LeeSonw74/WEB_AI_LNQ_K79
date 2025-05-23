@@ -245,3 +245,21 @@ body.home-page {
     display: flex;
   }
 }
+/* Nút buttton Du lịch Thái Nguyên */
+.button-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.button-link:hover {
+    background-color: #28a745;
+}
+
+.button-link:active {
+    transform: scale(0.95);
+}

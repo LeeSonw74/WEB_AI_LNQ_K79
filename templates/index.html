@@ -12,13 +12,13 @@
     <div class="navbar-brand">Du lịch Thái Nguyên</div>
     <div class="navbar-menu-container">
       <ul class="navbar-menu" id="navbar-menu">
-        <li><a href="#">Trang chủ</a></li>
+        <li><a href="{{ url_for('index')}}">Trang chủ</a></li>
         <li><a href="#">Trống</a></li>
         <li><a href="#">Trống</a></li>
         <li><a href="#">Trống</a></li>
         <li><a href="#">Trống</a></li>
         <li><a href="#">Trống</a></li>
-        <li><a href="#">Trống</a></li>
+        <li><a href="{{url_for('history')}}">Lịch sử Chat Bot</a></li>
       </ul>
     </div>
     <button class="hamburger" onclick="toggleMenu()">☰</button>
