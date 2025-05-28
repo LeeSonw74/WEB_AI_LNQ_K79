@@ -49,7 +49,7 @@ def init_db():
             print("Cơ sở dữ liệu được khởi tạo thành công.")
     except sqlite3.Error as e:
         print(f"Lỗi khởi tạo cơ sở dữ liệu: {e}")
-
+init_db()
 # Lấy lịch sử theo session
 def get_chat_history(limit=5):
     session_id = session.get("session_id")
@@ -165,5 +165,4 @@ def clear_history():
         print(f"Lỗi xóa lịch sử: {e}")
         return jsonify({"status": "error", "message": "Lỗi khi xóa lịch sử."})
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True)
