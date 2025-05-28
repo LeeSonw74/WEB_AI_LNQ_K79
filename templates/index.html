@@ -2,7 +2,9 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Du lịch Thái Nguyên</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Du Lịch Thái Nguyên</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -12,9 +14,10 @@
     <div class="navbar-brand">Du lịch Thái Nguyên</div>
     <div class="navbar-menu-container">
       <ul class="navbar-menu" id="navbar-menu">
-        <li><a href="{{ url_for('index') }}" class="active">Trang chủ</a></li>
-        <li><a href="{{ url_for('chat') }}">Chatbot AI</a></li>
-        <li><a href="{{ url_for('history') }}">Lịch sử Chat Bot</a></li>
+        <li><a href="{{ url_for('index')}}" class="active">Trang chủ</a></li>
+        <li><a href="{{ url_for('index')}}#dia-diem-noi-bat">Địa điểm nổi bật</a></li>
+        <li><a href="{{ url_for('chat')}}">Chatbot AI</a></li>
+        <li><a href="{{ url_for('history')}}">Lịch sử Chat Bot</a></li>
       </ul>
     </div>
     <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -23,47 +26,61 @@
     </button>
   </nav>
 
+  <!-- Phần ảnh nền Hero -->
+  <header class="hero">
+    <div class="overlay"></div>
+    <div class="hero-content">
+      <a href="#dia-diem-noi-bat" class="btn">Khám phá ngay</a>
+    </div>
+  </header>
+
+  <!-- Phần địa điểm nổi bật -->
+  <section id="dia-diem-noi-bat" class="section dark">
+    <div class="container">
+      <h2>🌟 Địa điểm nổi bật</h2>
+      <div class="card-grid">
+        <div class="card">
+          <img src="{{ url_for('static', filename='ho_nui_coc.jpg') }}" alt="Hồ Núi Cốc" loading="lazy">
+          <div class="card-content">
+            <h3>Hồ Núi Cốc</h3>
+            <p>
+Hồ Núi Cốc, Thái Nguyên, là danh thắng nổi tiếng với cảnh quan hữu tình, gắn liền với truyền thuyết tình yêu cảm động và các hoạt động du lịch như chèo thuyền, khám phá đảo.</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="{{ url_for('static', filename='ATK_Dinh_Hoa.jpg') }}" alt="ATK Định Hóa" loading="lazy">
+          <div class="card-content">
+            <h3>ATK Định Hóa</h3>
+            <p>ATK Định Hóa, Thái Nguyên, là Di tích Quốc gia đặc biệt, trung tâm lãnh đạo kháng chiến chống Pháp (1947-1954) của Chủ tịch Hồ Chí Minh và Trung ương Đảng, nổi bật với các địa điểm như Tỉn Keo và Nhà tưởng niệm Bác Hồ.</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="{{ url_for('static', filename='Hang_Phuong_Hoang.jpg') }}" alt="Hang Phượng Hoàng" loading="lazy">
+          <div class="card-content">
+            <h3>Hang Phượng Hoàng</h3>
+            <p>Hang Phượng Hoàng, thuộc xã Phú Thượng, huyện Võ Nhai, Thái Nguyên, là danh thắng quốc gia nổi tiếng với hệ thống hang động ba tầng, nhũ đá kỳ ảo và suối Mỏ Gà thơ mộng.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Biểu tượng chatbot -->
   <div class="chatbot-icon" id="chatbot-icon" onclick="toggleChat(event)">
-    <img src="{{ url_for('static', filename='icon.jpg') }}" alt="Chatbot">
+    <img src="{{ url_for('static', filename='icon.jpg') }}" alt="Chatbot" loading="lazy">
   </div>
 
   <!-- Khung chat popup -->
   <div class="chat-container" id="chat-container">
     <div class="chat-header">
-      <h2><a href="{{ url_for('chat') }}" class="button-link">🤖Chatbot🤖</a></h2>
+      <h2><a href="{{ url_for('chat') }}" class="button-link">🤖 Chatbot 🤖</a></h2>
       <div>
         <span class="minimize-btn" onclick="minimizeChat()">-</span>
         <span class="close-btn" onclick="clearAndCloseChat()">×</span>
       </div>
     </div>
     <div class="chat-body" id="chat-body">
-      <!-- Hiển thị lịch sử trò chuyện -->
-      {% for user_input, bot_response in history %}
-        <div class="message-wrapper">
-          <div class="message user-message">
-            <span>{{ user_input }}</span>
-          </div>
-          <div class="message bot-message">
-            <span style="white-space: pre-wrap;">{{ bot_response | safe }}</span>
-          </div>
-        </div>
-      {% endfor %}
-      <!-- Hiển thị tin nhắn mới nhất -->
-      {% if user_input %}
-        <div class="message-wrapper">
-          <div class="message user-message">
-            <span>{{ user_input }}</span>
-          </div>
-        </div>
-      {% endif %}
-      {% if bot_response %}
-        <div class="message-wrapper">
-          <div class="message bot-message">
-            <span style="white-space: pre-wrap;">{{ bot_response | safe }}</span>
-          </div>
-        </div>
-      {% endif %}
+      {% include 'chat_body.html' %}
       <div class="loading" id="loading" style="display: none;">
         <div class="dot"></div>
         <div class="dot"></div>
