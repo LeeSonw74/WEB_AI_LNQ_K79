@@ -55,7 +55,7 @@ select:focus {
 
 button {
   background-color: var(--primary-color);
-  color: white;
+  color: rgb(0, 0, 0);
   padding: 14px 24px;
   font-size: 1rem;
   font-weight: 600;
@@ -68,4 +68,42 @@ button {
 button:hover {
   background-color: #e5b100;
   transform: translateY(-2px);
+}
+body.dark-mode .section {
+  background: linear-gradient(to bottom, #111, #222);
+  color: #e0e0e0;
+}
+
+body.dark-mode .itinerary-form {
+  background: #1e1e1e;
+  border-left: 5px solid var(--primary-color);
+  box-shadow: 0 12px 30px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .itinerary-form h3 {
+  color: var(--primary-color);
+}
+
+body.dark-mode .form-group label {
+  color: #ddd;
+}
+
+body.dark-mode select {
+  background: #2a2a2a;
+  color: #f1f1f1;
+  border: 1px solid #555;
+}
+
+body.dark-mode select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px var(--primary-color);
+}
+
+body.dark-mode button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+body.dark-mode button:hover {
+  background-color: #e5b100;
 }

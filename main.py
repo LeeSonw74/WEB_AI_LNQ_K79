@@ -6,13 +6,39 @@ import uuid
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+import smtplib
+from email.message import EmailMessage
 
 app = Flask(__name__)
 app.secret_key = 'chimtokhonglochetdoi'
 
 # Load API key từ biến môi trường
 load_dotenv()
-api_keys = [os.getenv("GOOGLE_API_KEY")]  # Sửa lại để lấy từ .env thay vì hardcode
+api_keys = [os.getenv("GOOGLE_API_KEY")] 
+
+# Send_email (Cập nhật để hỗ trợ gửi đến nhiều người nhận)
+def send_email(subject, body, receiver, is_html=False):
+    sender = os.getenv("EMAIL_SENDER")
+    password = os.getenv("EMAIL_PASSWORD")
+    
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = sender
+    msg["To"] = receiver
+    if is_html:
+        msg.add_alternative(body, subtype='html')
+    else:
+        msg.set_content(body)
+    
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+            smtp.login(sender, password)
+            smtp.send_message(msg)
+        print(f"Email gửi thành công đến {receiver}")
+        return True
+    except Exception as e:
+        print(f"Lỗi gửi email đến {receiver}: {e}")
+        return False
 
 # Cấu hình model theo key
 def key_model(api_key):
@@ -250,5 +276,49 @@ def clear_history():
         print(f"Lỗi xóa lịch sử: {e}")
         return jsonify({"status": "error", "message": "Lỗi khi xóa lịch sử."})
 
-if __name__ == "__main__":
+# Gửi form (Cập nhật để gửi email phản hồi đến người dùng)
+@app.route("/send_form", methods=["POST"])
+def send_form():
+    name = request.form.get("name", "").strip()
+    email = request.form.get("email", "").strip()
+    message = request.form.get("message", "").strip()
+
+    if not name or not email or not message:
+        return jsonify({"status": "error", "message": "Vui lòng điền đầy đủ thông tin."})
+
+    # Gửi email đến admin
+    admin_subject = f"Liên hệ từ {name} - {email}"
+    admin_body = f"Tên: {name}\nEmail: {email}\n\nNội dung:\n{message}"
+    admin_receiver = os.getenv("EMAIL_RECEIVER")
+    admin_success = send_email(admin_subject, admin_body, admin_receiver)
+
+    # Gửi email phản hồi đến người dùng
+    user_subject = "Xác nhận nhận được phản hồi từ bạn"
+    user_body = f"""
+    <html>
+        <body>
+            <h2>Chào {name},</h2>
+            <p>Cảm ơn bạn đã liên hệ với chúng tôi!</p>
+            <p>Chúng tôi đã nhận được tin nhắn của bạn:</p>
+            <blockquote style="border-left: 4px solid #1abc9c; padding-left: 10px;">
+                {message}
+            </blockquote>
+            <p>Chúng tôi sẽ phản hồi sớm nhất có thể.</p>
+            <p><strong>Trân trọng,</strong><br>Đội ngũ hỗ trợ</p>
+        </body>
+    </html>
+    """
+    user_success = send_email(user_subject, user_body, email, is_html=True)
+
+    if admin_success and user_success:
+        return jsonify({"status": "success", "message": "Đã gửi tin nhắn thành công! Kiểm tra email để nhận phản hồi."})
+    else:
+        return jsonify({"status": "error", "message": "Lỗi khi gửi email. Vui lòng thử lại sau."})
+
+# Trang gửi form
+@app.route("/contact")
+def contact():
+    return render_template("form.html")
+
+if __name__ == '__main__':
     app.run(debug=True)

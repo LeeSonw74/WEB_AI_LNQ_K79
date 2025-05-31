@@ -7,16 +7,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <!-- Thanh menu -->
+  <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-brand">Du lịch Thái Nguyên</div>
     <div class="navbar-menu-container">
       <ul class="navbar-menu" id="navbar-menu">
         <li><a href="{{ url_for('index') }}" class="active">Trang chủ</a></li>
-        <li><a href="{{ url_for('itinerary') }}">Hành trình</a></li>
         <li><a href="{{ url_for('index')}}#dia-diem-noi-bat">Địa điểm nổi bật</a></li>
+        <li><a href="{{ url_for('itinerary') }}">Hành trình</a></li>
         <li><a href="{{ url_for('chat') }}">Chatbot AI</a></li>
         <li><a href="{{ url_for('history') }}">Lịch sử Chat Bot</a></li>
+        <li><a href="{{ url_for('contact') }}">Phản hồi</a></li>
       </ul>
     </div>
     <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -29,7 +30,7 @@
   <section class="hero">
     <div class="overlay"></div>
     <div class="hero-content">
-      <a href="#dia-diem-noi-bat" class="btn">Trải nghiệm ngay</a>
+      <a href="#dia-diem-noi-bat" class="btn">Khám phá ngay</a>
     </div>
   </section>
 
@@ -38,25 +39,37 @@
     <h2>🌟 Địa điểm nổi bật</h2>
     <div class="container">
       <div class="card-grid">
+
         <div class="card">
-          <img src="{{ url_for('static', filename='image/ho_nui_coc.jpg') }}" alt="Hồ Núi Cốc" loading="lazy">
+          <div class="card-img-wrapper">
+            <img src="{{ url_for('static', filename='image/ho_nui_coc.jpg') }}" alt="Hồ Núi Cốc" loading="lazy">
+            <a href="https://vi.wikipedia.org/wiki/Hồ_Núi_Cốc" target="_blank" class="btn-overlay">Trải nghiệm</a>
+          </div>
           <div class="card-content">
             <h3>Hồ Núi Cốc</h3>
-            <p>Hồ Núi Cốc, Thái Nguyên, là danh thắng nổi tiếng với cảnh quan hữu tình, gắn liền với truyền thuyết tình yêu cảm động và các hoạt động du lịch như chèo thuyền, khám phá đảo.</p>
+            <p>Danh thắng nổi tiếng với cảnh quan hữu tình, truyền thuyết tình yêu cảm động và nhiều ho ạt động như chèo thuyền, khám phá đảo.</p>
           </div>
         </div>
+
         <div class="card">
-          <img src="{{ url_for('static', filename='image/atk_dinh_hoa.jpg') }}" alt="ATK Định Hóa" loading="lazy">
+          <div class="card-img-wrapper">
+            <img src="{{ url_for('static', filename='image/atk_dinh_hoa.jpg') }}" alt="ATK Định Hóa" loading="lazy">
+            <a href="https://vi.wikipedia.org/wiki/An_toàn_khu" target="_blank" class="btn-overlay">Trải nghiệm</a>
+          </div>
           <div class="card-content">
             <h3>ATK Định Hóa</h3>
-            <p>ATK Định Hóa, Thái Nguyên, là Di tích Quốc gia đặc biệt, trung tâm lãnh đạo kháng chiến chống Pháp (1947-1954) của Chủ tịch Hồ Chí Minh và Trung ương Đảng, nổi bật với các địa điểm như Tỉn Keo và Nhà tưởng niệm Bác Hồ.</p>
+            <p>Di tích Quốc gia đặc biệt – trung tâm kháng chiến của Chủ tịch Hồ Chí Minh và Trung ương Đảng trong kháng chiến chống Pháp.</p>
           </div>
         </div>
+
         <div class="card">
-          <img src="{{ url_for('static', filename='image/hang_phuong_hoang.jpg') }}" alt="Hang Phượng Hoàng" loading="lazy">
+          <div class="card-img-wrapper">
+            <img src="{{ url_for('static', filename='image/doi-che-tan-cuong.jpeg') }}" alt="Đồi chè Tân CươngCương" loading="lazy">
+            <a href="https://vi.wikipedia.org/wiki/Tr%C3%A0_T%C3%A2n_C%C6%B0%C6%A1ng" target="_blank" class="btn-overlay">Trải nghiệm</a>
+          </div>
           <div class="card-content">
-            <h3>Hang Phượng Hoàng</h3>
-            <p>Hang Phượng Hoàng, thuộc xã Phú Thượng, huyện Võ Nhai, Thái Nguyên, là danh thắng quốc gia nổi tiếng với hệ thống hang động ba tầng, nhũ đá kỳ ảo và suối Mỏ Gà thơ mộng.</p>
+            <h3>Đồi chè Tân Cương</h3>
+            <p>Danh thắng quốc gia nổi bật với hệ thống ba tầng hang động, nhũ đá kỳ ảo và dòng suối Mỏ Gà thơ mộng ở huyện Võ Nhai.</p>
           </div>
         </div>
       </div>

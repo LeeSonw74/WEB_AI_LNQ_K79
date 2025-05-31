@@ -296,3 +296,107 @@ window.addEventListener('load', function() {
     updateChatPosition(); // Đặt vị trí khung chat
   }
 });
+document.getElementById("contactForm").onsubmit = async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const submitButton = form.querySelector('button[type="submit"]');
+  const formMessage = document.getElementById("formMessage");
+
+  // Hiển thị hiệu ứng loading
+  submitButton.classList.add('loading');
+  submitButton.disabled = true; // Vô hiệu hóa nút
+  formMessage.textContent = ''; // Xóa thông báo cũ
+
+  try {
+    const res = await fetch("/send_form", {
+      method: "POST",
+      body: formData
+    });
+    const result = await res.json();
+    formMessage.textContent = result.message;
+    if (result.status === "success") {
+      form.reset();
+      formMessage.style.color = "green";
+    } else {
+      formMessage.style.color = "red";
+    }
+  } catch (error) {
+    formMessage.textContent = "Lỗi kết nối. Vui lòng thử lại.";
+    formMessage.style.color = "red";
+    console.error('Lỗi gửi biểu mẫu:', error);
+  } finally {
+    // Ẩn hiệu ứng loading
+    submitButton.classList.remove('loading');
+    submitButton.disabled = false; // Kích hoạt lại nút
+  }
+};
+const express = require('express');
+const nodemailer = require('nodemailer');
+const bodyParser = require('body-parser');
+const app = express();
+const port = 3000;
+
+// Cấu hình middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Cấu hình nodemailer
+const transporter = nodemailer.createTransport({
+  service: 'Gmail', // Hoặc sử dụng SMTP của bạn (VD: Gmail, SendGrid)
+  auth: {
+    user: 'your-email@example.com', // Email của bạn
+    pass: 'your-app-specific-password', // Mật khẩu ứng dụng (không phải mật khẩu email thông thường)
+  }
+});
+
+// Xử lý endpoint /send_form
+app.post('/send_form', async (req, res) => {
+  try {
+    const { name, email, message, phone } = req.body; // Giả sử biểu mẫu có các trường này
+
+    // Kiểm tra dữ liệu đầu vào
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Vui lòng điền đầy đủ thông tin.'
+      });
+    }
+
+    // Gửi email phản hồi đến người dùng
+    const mailOptions = {
+      from: 'your-email@example.com',
+      to: email, // Email của người dùng
+      subject: 'Xác nhận nhận được phản hồi từ bạn',
+      text: `Chào ${name},\n\nCảm ơn bạn đã liên hệ với chúng tôi!\n\nChúng tôi đã nhận được tin nhắn của bạn:\n${message}\n\nChúng tôi sẽ phản hồi sớm nhất có thể.\n\nTrân trọng,\nYour Team`
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    // Gửi email thông báo cho admin (nếu cần)
+    const adminMailOptions = {
+      from: 'your-email@example.com',
+      to: 'admin@example.com', // Email của admin
+      subject: 'Phản hồi mới từ biểu mẫu liên hệ',
+      text: `Có phản hồi mới từ:\nTên: ${name}\nEmail: ${email}\nĐiện thoại: ${phone || 'N/A'}\nTin nhắn: ${message}`
+    };
+
+    await transporter.sendMail(adminMailOptions);
+
+    // Phản hồi thành công cho client
+    res.json({
+      status: 'success',
+      message: 'Tin nhắn của bạn đã được gửi thành công! Chúng tôi sẽ liên hệ sớm.'
+    });
+  } catch (error) {
+    console.error('Lỗi khi xử lý gửi biểu mẫu:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Có lỗi xảy ra khi gửi biểu mẫu. Vui lòng thử lại sau.'
+    });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server chạy tại http://localhost:${port}`);
+});
