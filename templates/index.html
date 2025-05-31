@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Du lịch Thái Nguyên</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -13,10 +13,10 @@
     <div class="navbar-menu-container">
       <ul class="navbar-menu" id="navbar-menu">
         <li><a href="{{ url_for('index') }}" class="active">Trang chủ</a></li>
+        <li><a href="{{ url_for('itinerary') }}">Hành trình</a></li>
         <li><a href="{{ url_for('index')}}#dia-diem-noi-bat">Địa điểm nổi bật</a></li>
         <li><a href="{{ url_for('chat') }}">Chatbot AI</a></li>
         <li><a href="{{ url_for('history') }}">Lịch sử Chat Bot</a></li>
-        <li><a href="{{ url_for('itinerary') }}">Hành trình</a></li>
       </ul>
     </div>
     <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -29,9 +29,7 @@
   <section class="hero">
     <div class="overlay"></div>
     <div class="hero-content">
-      <h1>Khám phá Thái Nguyên</h1>
-      <p>Hành trình đến với thiên nhiên và văn hóa tuyệt đẹp</p>
-      <a href="#dia-diem-noi-bat" class="btn">Khám phá ngay</a>
+      <a href="#dia-diem-noi-bat" class="btn">Trải nghiệm ngay</a>
     </div>
   </section>
 
@@ -41,21 +39,21 @@
     <div class="container">
       <div class="card-grid">
         <div class="card">
-          <img src="{{ url_for('static', filename='ho_nui_coc.jpg') }}" alt="Hồ Núi Cốc" loading="lazy">
+          <img src="{{ url_for('static', filename='image/ho_nui_coc.jpg') }}" alt="Hồ Núi Cốc" loading="lazy">
           <div class="card-content">
             <h3>Hồ Núi Cốc</h3>
             <p>Hồ Núi Cốc, Thái Nguyên, là danh thắng nổi tiếng với cảnh quan hữu tình, gắn liền với truyền thuyết tình yêu cảm động và các hoạt động du lịch như chèo thuyền, khám phá đảo.</p>
           </div>
         </div>
         <div class="card">
-          <img src="{{ url_for('static', filename='atk_dinh_hoa.jpg') }}" alt="ATK Định Hóa" loading="lazy">
+          <img src="{{ url_for('static', filename='image/atk_dinh_hoa.jpg') }}" alt="ATK Định Hóa" loading="lazy">
           <div class="card-content">
             <h3>ATK Định Hóa</h3>
             <p>ATK Định Hóa, Thái Nguyên, là Di tích Quốc gia đặc biệt, trung tâm lãnh đạo kháng chiến chống Pháp (1947-1954) của Chủ tịch Hồ Chí Minh và Trung ương Đảng, nổi bật với các địa điểm như Tỉn Keo và Nhà tưởng niệm Bác Hồ.</p>
           </div>
         </div>
         <div class="card">
-          <img src="{{ url_for('static', filename='hang_phuong_hoang.jpg') }}" alt="Hang Phượng Hoàng" loading="lazy">
+          <img src="{{ url_for('static', filename='image/hang_phuong_hoang.jpg') }}" alt="Hang Phượng Hoàng" loading="lazy">
           <div class="card-content">
             <h3>Hang Phượng Hoàng</h3>
             <p>Hang Phượng Hoàng, thuộc xã Phú Thượng, huyện Võ Nhai, Thái Nguyên, là danh thắng quốc gia nổi tiếng với hệ thống hang động ba tầng, nhũ đá kỳ ảo và suối Mỏ Gà thơ mộng.</p>
@@ -77,7 +75,7 @@
 
   <!-- Chatbot icon -->
   <div class="chatbot-icon" id="chatbot-icon">
-    <img src="{{ url_for('static', filename='icon.jpg') }}" alt="Chatbot" loading="lazy">
+    <img src="{{ url_for('static', filename='image/icon.jpg') }}" alt="Chatbot" loading="lazy">
   </div>
 
   <!-- Khung chat -->
@@ -102,7 +100,7 @@
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -4,10 +4,12 @@ const loading = document.getElementById('loading');
 const chatBody = document.getElementById('chat-body');
 const chatIcon = document.getElementById('chatbot-icon');
 const chatContainer = document.getElementById('chat-container');
+const closeBtn = document.querySelector('.close-btn');
+const minimizeBtn = document.querySelector('.minimize-btn');
 
-if (!form || !textarea || !loading || !chatBody || !chatIcon || !chatContainer) {
+if (!form || !textarea || !loading || !chatBody || !chatIcon || !chatContainer || !closeBtn || !minimizeBtn) {
   console.error('Một hoặc nhiều phần tử DOM không được tìm thấy trong scripts.js:', {
-    form, textarea, loading, chatBody, chatIcon, chatContainer
+    form, textarea, loading, chatBody, chatIcon, chatContainer, closeBtn, minimizeBtn
   });
 } else {
   console.log('Tất cả phần tử DOM được tìm thấy.');
@@ -23,6 +25,7 @@ function toggleMenu() {
   const menu = document.getElementById('navbar-menu');
   if (menu) {
     menu.classList.toggle('active');
+    console.log('Menu được chuyển đổi trạng thái:', menu.classList.contains('active') ? 'Mở' : 'Đóng');
   }
 }
 
@@ -35,10 +38,12 @@ function toggleTheme() {
       moonIcon.classList.remove('fa-moon');
       moonIcon.classList.add('fa-sun');
       localStorage.setItem('theme', 'dark');
+      console.log('Chuyển sang chế độ tối');
     } else {
       moonIcon.classList.remove('fa-sun');
       moonIcon.classList.add('fa-moon');
       localStorage.setItem('theme', 'light');
+      console.log('Chuyển sang chế độ sáng');
     }
   }
 }
@@ -67,15 +72,19 @@ function toggleChat(event) {
 }
 
 function minimizeChat() {
-  if (chatBody) chatBody.innerHTML = '';
-  if (textarea) textarea.value = '';
-  if (chatContainer) chatContainer.classList.remove('visible');
+  if (chatContainer) {
+    console.log('Thu nhỏ khung chat.');
+    chatContainer.classList.remove('visible');
+  }
 }
 
 function clearAndCloseChat() {
   if (chatBody) chatBody.innerHTML = '';
   if (textarea) textarea.value = '';
-  if (chatContainer) chatContainer.classList.remove('visible');
+  if (chatContainer) {
+    console.log('Đóng và xóa khung chat.');
+    chatContainer.classList.remove('visible');
+  }
 }
 
 function sendMessage() {
@@ -103,7 +112,7 @@ function sendMessage() {
           userDiv.className = 'message-wrapper';
           userDiv.innerHTML = `
             <div class="message user-message"><span>${chat[0]}</span></div>
-            <div class ECONOMY="datetime">${chat[2]}</div>
+            <div class="datetime">${chat[2]}</div>
             <div class="message bot-message"><span style="white-space: pre-wrap;">${chat[1]}</span></div>
             <div class="datetime">${chat[2]}</div>
           `;
@@ -137,6 +146,7 @@ function showLoading() {
   if (loading) {
     loading.style.display = 'flex';
     if (textarea) textarea.disabled = true;
+    console.log('Hiển thị trạng thái loading.');
   }
 }
 
@@ -144,11 +154,15 @@ function hideLoading() {
   if (loading) {
     loading.style.display = 'none';
     if (textarea) textarea.disabled = false;
+    console.log('Ẩn trạng thái loading.');
   }
 }
 
 function scrollToBottom() {
-  if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+  if (chatBody) {
+    chatBody.scrollTop = chatBody.scrollHeight;
+    console.log('Cuộn xuống cuối khung chat.');
+  }
 }
 
 function startDragging(e) {
@@ -158,6 +172,7 @@ function startDragging(e) {
     initialY = e.clientY - currentY;
     isDragging = true;
     chatIcon.style.cursor = 'grabbing';
+    console.log('Bắt đầu kéo chatbot icon.');
   }
 }
 
@@ -178,6 +193,7 @@ function drag(e) {
     if (chatContainer.classList.contains('visible')) {
       updateChatPosition();
     }
+    console.log('Đang kéo chatbot icon:', { currentX, currentY });
   }
 }
 
@@ -185,6 +201,7 @@ function stopDragging() {
   if (isDragging) {
     isDragging = false;
     chatIcon.style.cursor = 'move';
+    console.log('Dừng kéo chatbot icon.');
   }
 }
 
@@ -204,6 +221,10 @@ function updateChatPosition() {
 
   chatContainer.style.top = (iconRect.top - chatContainer.offsetHeight + chatIcon.offsetHeight + margin) + 'px';
   chatContainer.style.bottom = 'auto';
+  console.log('Cập nhật vị trí khung chat:', {
+    left: chatContainer.style.left,
+    top: chatContainer.style.top
+  });
 }
 
 if (textarea) {
@@ -212,6 +233,7 @@ if (textarea) {
       e.preventDefault();
       showLoading();
       sendMessage();
+      console.log('Nhấn Enter để gửi tin nhắn.');
     }
   });
 }
@@ -221,6 +243,20 @@ if (chatIcon) {
   document.addEventListener('mousemove', drag);
   document.addEventListener('mouseup', stopDragging);
   chatIcon.addEventListener('click', toggleChat);
+}
+
+if (closeBtn) {
+  closeBtn.addEventListener('click', function() {
+    clearAndCloseChat();
+    console.log('Nút đóng được nhấp.');
+  });
+}
+
+if (minimizeBtn) {
+  minimizeBtn.addEventListener('click', function() {
+    minimizeChat();
+    console.log('Nút thu nhỏ được nhấp.');
+  });
 }
 
 window.addEventListener('load', function() {
@@ -233,6 +269,7 @@ window.addEventListener('load', function() {
       moonIcon.classList.remove('fa-moon');
       moonIcon.classList.add('fa-sun');
     }
+    console.log('Khởi tạo với chế độ tối.');
   }
   hideLoading();
   scrollToBottom();

@@ -12,7 +12,7 @@ app.secret_key = 'chimtokhonglochetdoi'
 
 # Load API key từ biến môi trường
 load_dotenv()
-api_keys = [os.getenv("GOOGLE_API_KEY")]  # Sửa lại để lấy từ .env thay vì hardcode
+api_keys = [os.getenv("GOOGLE_API_KEY")]  # Sửa lại để lấy từ .env
 
 # Cấu hình model theo key
 def key_model(api_key):
@@ -220,20 +220,19 @@ def send_message():
 # Tạo hành trình bằng AI
 @app.route("/generate_itinerary", methods=["POST"])
 def generate_itinerary():
-    prompt = request.form.get("prompt", "").strip()
-    if not prompt:
-        return jsonify({"status": "error", "message": "Vui lòng cung cấp thông tin để tạo hành trình."})
-
     try:
+        prompt = request.form.get("prompt", "").strip()
+        if not prompt:
+            return jsonify({"status": "error", "message": "Vui lòng cung cấp thông tin để tạo hành trình."})
         itinerary = get_response(prompt)
         if itinerary.startswith("Lỗi:") or itinerary == "Tất cả API key đã hết hạn hoặc lỗi. Vui lòng thử lại sau.":
             return jsonify({"status": "error", "message": itinerary})
-
         cleaned_itinerary = "\n".join(line.strip() for line in itinerary.splitlines() if line.strip())
-        return jsonify({"status": "success", "itinerary": cleaned_itinerary})
+        itinerary_html = markdown.markdown(cleaned_itinerary)
+        return jsonify({"status": "success", "itinerary": itinerary_html})
     except Exception as e:
+        app.logger.error(f"Lỗi khi tạo hành trình: {e}")
         return jsonify({"status": "error", "message": f"Lỗi khi tạo hành trình: {str(e)}"})
-
 # Xóa lịch sử của session hiện tại
 @app.route("/clear_history", methods=["POST"])
 def clear_history():
