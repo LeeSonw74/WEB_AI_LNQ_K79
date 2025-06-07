@@ -4,64 +4,75 @@ function toggleMenu() {
 }
 
 function clearHistory() {
-  if (confirm('Bạn có chắc muốn xóa lịch sử trò chuyện không?')) {
-    const historyContent = document.getElementById('history-content');
-    const chatBody = document.getElementById('chat-body');
-    const clearBtn = document.querySelector('.clear-history-btn');
-    const loading = document.createElement('div');
-    loading.className = 'loading';
-    loading.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
-    historyContent.appendChild(loading);
-
-    $.ajax({
-      url: '/clear_history',
-      type: 'POST',
-      timeout: 5000,
-      success: function(response) {
-        if (response.status === 'success') {
-          // Kiểm tra lịch sử từ server
-          $.ajax({
-            url: '/get_history',
-            type: 'GET',
-            timeout: 5000,
-            success: function(historyResponse) {
-              historyContent.removeChild(loading);
-              if (historyResponse.status === 'success' && (!historyResponse.history || historyResponse.history.length === 0)) {
-                historyContent.innerHTML = '<p class="success-message">Lịch sử trò chuyện đã được xóa thành công!</p>';
-                if (chatBody) {
-                  chatBody.innerHTML = '<div class="loading" id="loading" style="display: none;"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
-                }
-                if (clearBtn) clearBtn.disabled = true;
-                console.log('Lịch sử trò chuyện đã được xóa thành công.');
-              } else {
-                historyContent.innerHTML = '<p class="error-message">Lỗi: Lịch sử không được xóa trên server. Vui lòng thử lại.</p>';
-                console.error('Lịch sử vẫn còn sau khi xóa:', historyResponse.history);
-              }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-              historyContent.removeChild(loading);
-              alert(`Lỗi khi kiểm tra lịch sử: ${textStatus}. Vui lòng thử lại.`);
-              console.error('Lỗi AJAX khi kiểm tra lịch sử:', textStatus, errorThrown, jqXHR);
-            }
-          });
-        } else {
-          historyContent.removeChild(loading);
-          alert(response.message || 'Lỗi khi xóa lịch sử trò chuyện.');
-        }
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        historyContent.removeChild(loading);
-        let errorMessage = 'Lỗi khi gửi yêu cầu xóa lịch sử. Vui lòng thử lại.';
-        if (textStatus === 'timeout') {
-          errorMessage = 'Yêu cầu xóa lịch sử mất quá nhiều thời gian. Vui lòng kiểm tra kết nối mạng.';
-        } else if (jqXHR.status) {
-          errorMessage = `Lỗi server (${jqXHR.status}): ${errorThrown}`;
-        }
-        alert(errorMessage);
-        console.error('Lỗi AJAX trong clearHistory:', textStatus, errorThrown, jqXHR);
-      }
-    });
+  if (!confirm('Bạn có chắc muốn xóa lịch sử trò chuyện không?')) {
+    return;
   }
+
+  const historyContent = document.getElementById('history-content');
+  const chatBody = document.getElementById('chat-body');
+  const clearBtn = document.querySelector('.clear-history-btn');
+  const loading = document.createElement('div');
+  loading.className = 'loading';
+  loading.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  historyContent.appendChild(loading);
+
+  $.ajax({
+    url: '/clear_history',
+    type: 'POST',
+    timeout: 5000,
+    success: function(response) {
+      historyContent.removeChild(loading);
+      if (response.status === 'success') {
+        // Verify history is cleared
+        $.ajax({
+          url: '/get_history',
+          type: 'GET',
+          timeout: 5000,
+          success: function(historyResponse) {
+            if (historyResponse.status === 'success') {
+              historyContent.innerHTML = `<p class="success-message">${response.message || 'Lịch sử trò chuyện đã được xóa thành công!'}</p>`;
+              if (chatBody) {
+                chatBody.innerHTML = '<div class="loading" id="loading" style="display: none;"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+              }
+              if (clearBtn) {
+                clearBtn.disabled = true;
+              }
+              console.log('Lịch sử trò chuyện đã được xóa thành công.');
+              checkHistoryEmpty(); // Đảm bảo trạng thái nút được cập nhật
+            } else {
+              historyContent.innerHTML = `<p class="error-message">Lỗi: ${historyResponse.message || 'Không thể xác minh lịch sử đã xóa.'}</p>`;
+              console.error('Lỗi khi xác minh lịch sử:', historyResponse.message);
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            historyContent.removeChild(loading);
+            let errorMessage = 'Lỗi khi kiểm tra lịch sử. Vui lòng thử lại.';
+            if (textStatus === 'timeout') {
+              errorMessage = 'Yêu cầu kiểm tra lịch sử mất quá nhiều thời gian.';
+            } else if (jqXHR.status) {
+              errorMessage = `Lỗi server (${jqXHR.status}): ${errorThrown}`;
+            }
+            historyContent.innerHTML = `<p class="error-message">${errorMessage}</p>`;
+            console.error('Lỗi AJAX khi kiểm tra lịch sử:', textStatus, errorThrown, jqXHR);
+          }
+        });
+      } else {
+        historyContent.innerHTML = `<p class="error-message">${response.message || 'Lỗi khi xóa lịch sử trò chuyện.'}</p>`;
+        console.error('Lỗi khi xóa lịch sử:', response.message);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      historyContent.removeChild(loading);
+      let errorMessage = 'Lỗi khi gửi yêu cầu xóa lịch sử. Vui lòng thử lại.';
+      if (textStatus === 'timeout') {
+        errorMessage = 'Yêu cầu xóa lịch sử mất quá nhiều thời gian.';
+      } else if (jqXHR.status) {
+        errorMessage = `Lỗi server (${jqXHR.status}): ${errorThrown}`;
+      }
+      historyContent.innerHTML = `<p class="error-message">${errorMessage}</p>`;
+      console.error('Lỗi AJAX trong clearHistory:', textStatus, errorThrown, jqXHR);
+    }
+  });
 }
 
 function filterHistory() {
