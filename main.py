@@ -3,7 +3,6 @@ import sqlite3
 import markdown
 import uuid
 from datetime import datetime
-import os
 import smtplib
 from email.message import EmailMessage
 import requests
@@ -12,10 +11,7 @@ app = Flask(__name__)
 app.secret_key = 'chimtokhonglochetdoi'
 
 API_KEYS = [
-    "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",
-    "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",
-    "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",
-    "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"
+    "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"
 ]
 
 MODEL = "cohere/command-r-plus"
@@ -324,4 +320,4 @@ def contact():
     return render_template("form.html")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) 
